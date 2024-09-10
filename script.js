@@ -139,10 +139,13 @@ const emails = [
     }
    
   ];
+  const emailSent = []
+
+  const draftEmail = []
 
 
-const createDiv = (clas)=>{
-       const divNav = document.createElement("div")
+const create = (clas,element)=>{
+       const divNav = document.createElement(element)
        divNav.classList.add(clas)
        return divNav
 }
@@ -156,13 +159,13 @@ const createItemNav = (stringTitle,nav)=>{
 }
 
 const dsplayIncomingEmailes = (array) => {
-    const mainDiv = createDiv("class-main-div")
+    const mainDiv = create("class-main-div","div")
     array.forEach(element => {
-        const divEmail = createDiv("class-div-email")
-        const from = document.createElement("h3")
-        const to = document.createElement("h3")
-        const title = document.createElement("h3")
-        const body = document.createElement("h3")
+        const divEmail = create("class-div-email","div")
+        const from = create("class-from","h3")
+        const to = create("class-to","h3")
+        const title = create("class-title","h3")
+        const body = create("class-body","h3")
         from.textContent = `FROM: ${element.from}`
         to.textContent = `TO: ${element.to}`
         title.textContent = `TITLE: ${element.title}`
@@ -176,19 +179,141 @@ const dsplayIncomingEmailes = (array) => {
     return mainDiv
     
 } 
+const divSendEmail = ()=>{
+    const divsend = create("class-div-send","div")
+    const divto = create("class-to","input")
+    divto.type = "email"
+    divto.placeholder = "send to" 
+    const divTitle = create("class-to-sent","input")
+    divTitle.type = "text"
+    divTitle.placeholder = "title"
+    const divBody = create("class-to-sent","input")
+    divBody.type = "text" 
+    divBody.placeholder = "body"
+    const submit = create("class-to-sent","button")
+    submit.textContent = "send"
+    submit.id = "send-btn"
+    const draft = create("class-to-sent","button")
+    draft.textContent = "save as draft"
+    draft.id = "draft-btn"
+    divsend.appendChild(divto)
+    divsend.appendChild(divTitle)
+    divsend.appendChild(divBody)
+    divsend.appendChild(submit)
+    divsend.appendChild(draft)
+    document.body.appendChild(divsend)
+
+    submit.addEventListener("click",()=>{
+        emailSent.push({
+            to: divto.value,
+            title:divTitle.value,
+            body:divBody.value
+        })
+        console.log(emailSent);
+        divsend.remove()
+    })
+    draft.addEventListener("click",()=>{
+        draftEmail.push({
+            to: divto.value,
+            title:divTitle.value,
+            body:divBody.value
+        })
+        divsend.remove()
+    })
+}
+
+const dsplaySentsEmails = (array) => {
+    const mainDiv = create("class-main-div","div")
+    array.forEach(element => {
+        const divEmail = create("class-div-email","div")
+        const to = create("class-to","h3")
+        const title = create("class-title","h3")
+        const body = create("class-body","h3")
+        to.textContent = `TO: ${element.to}`
+        title.textContent = `TITLE: ${element.title}`
+        body.textContent = `BODY: ${element.body} `
+        divEmail.appendChild(to)
+        divEmail.appendChild(title)
+        divEmail.appendChild(body)
+        mainDiv.appendChild(divEmail)       
+    });
+    return mainDiv
+}
+
+const dsplayDrafts = (array) => {
+    const mainDiv = create("class-main-div","div")
+    array.forEach(element => {
+        const divEmail = create("class-div-email","div")
+        const to = create("class-to","h3")
+        const title = create("class-title","h3")
+        const body = create("class-body","h3")
+        to.textContent = `TO: ${element.to}`
+        title.textContent = `TITLE: ${element.title}`
+        body.textContent = `BODY: ${element.body} `
+        divEmail.appendChild(to)
+        divEmail.appendChild(title)
+        divEmail.appendChild(body)
+        mainDiv.appendChild(divEmail)       
+    });
+    return mainDiv
+}
+
+const clearPage = () => {
+     while (document.body.firstChild) {
+        document.body.removeChild(document.body.firstChild)
+        
+     }
+}
 
 
-const mainNav = createDiv("class-nav")
+
+
+const mainNav = create("class-nav","div")
 const itemIncoming = createItemNav("דואר נכנס",mainNav)
 const itemOut = createItemNav("דואר יוצא",mainNav)
 const itemSetting = createItemNav("הגדרות",mainNav)
 const itemDraft = createItemNav("טיוטות",mainNav)
 const showEmail = dsplayIncomingEmailes(emails)
 
+
 itemIncoming.addEventListener("click",()=>{
+    clearPage()
     document.body.appendChild(showEmail)
+    document.body.appendChild(mainNav)
+    document.body.appendChild(sendEmail)
 })
 
+itemOut.addEventListener("click",()=>{
+    clearPage()
+    const showEmailSent = dsplaySentsEmails(emailSent)
+    document.body.appendChild(showEmailSent)
+    document.body.appendChild(mainNav)
+    document.body.appendChild(sendEmail)
+})
+const sendEmail = create("class-send","div")
+sendEmail.textContent = "+"
+
+sendEmail.addEventListener("click", ()=> {
+    clearPage()
+    divSendEmail()
+    document.body.appendChild(mainNav)
+    document.body.appendChild(sendEmail)
+
+})
+
+itemDraft.addEventListener("click",()=>{
+    clearPage()
+    const showDrafts = dsplayDrafts(draftEmail)
+    document.body.appendChild(showDrafts)
+    document.body.appendChild(mainNav)
+    document.body.appendChild(sendEmail)
+})
+
+
+
+
+
+document.body.appendChild(sendEmail)
 document.body.appendChild(mainNav)
 
 
