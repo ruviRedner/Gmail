@@ -9,3 +9,41 @@ body{
     height: 100%;
     background-color: aquamarine;
 }
+.class-nav{
+    height: 100%;
+    width: 10%;
+    position: fixed;
+    right: 0;
+    background-color: chartreuse;
+} 
+.class-nav-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid red;
+    background-color: gray;
+    width: 100%;
+    height: 10%;
+    color: beige;
+    font-size: 20px;
+} 
+.class-main-div{
+   position: absolute;
+   width: 50%;
+   height: 30%;
+   left: 20%;
+   right: 50%;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   
+   /* justify-content: center; */
+
+
+} 
+.class-div-email{
+    border: 5px double orange;
+    border-radius: 5%;
+    background-color: azure;
+    margin-top: 3%;    
+}
