@@ -275,6 +275,9 @@ const itemSetting = createItemNav("הגדרות",mainNav)
 const itemDraft = createItemNav("טיוטות",mainNav)
 const showEmail = dsplayIncomingEmailes(emails)
 
+const sendEmail = create("class-send","div")
+sendEmail.textContent = "+"
+
 
 itemIncoming.addEventListener("click",()=>{
     clearPage()
@@ -290,8 +293,6 @@ itemOut.addEventListener("click",()=>{
     document.body.appendChild(mainNav)
     document.body.appendChild(sendEmail)
 })
-const sendEmail = create("class-send","div")
-sendEmail.textContent = "+"
 
 sendEmail.addEventListener("click", ()=> {
     clearPage()
@@ -308,6 +309,8 @@ itemDraft.addEventListener("click",()=>{
     document.body.appendChild(mainNav)
     document.body.appendChild(sendEmail)
 })
+
+
 
 
 
