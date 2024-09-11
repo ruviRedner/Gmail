@@ -143,6 +143,30 @@ const emails = [
 
   const draftEmail = []
 
+  let selctedEmail = ""
+  let filterType = ""
+
+const createSettingSelect = (emailsList) => {
+  const divSelect = create("class-div-select","div")
+  const select = create("class-select","select")
+  const defOption = create("class-option","option")
+  defOption.textContent = "please choose email addres"
+  select.appendChild(defOption)
+
+  emailsList.forEach(email => {
+    const option = create("class-option","option")
+    option.value = email.from
+    option.textContent = email.from
+    select.appendChild(option)
+  })
+  select.addEventListener("change",(e)=>{
+    selctedEmail = e.target.value
+    console.log(selctedEmail);
+  })
+  divSelect.appendChild(select)
+  return divSelect
+
+}
 
 const create = (clas,element)=>{
        const divNav = document.createElement(element)
@@ -160,7 +184,9 @@ const createItemNav = (stringTitle,nav)=>{
 
 const dsplayIncomingEmailes = (array) => {
     const mainDiv = create("class-main-div","div")
-    array.forEach(element => {
+    array
+    
+    .forEach(element => {
         const divEmail = create("class-div-email","div")
         const from = create("class-from","h3")
         const to = create("class-to","h3")
@@ -178,7 +204,23 @@ const dsplayIncomingEmailes = (array) => {
     });
     return mainDiv
     
-} 
+}
+const FilteringIncomingMail  = ()  => {
+     clearPage()
+     let filter
+     if(filterType == "to"){
+      filter = emails.filter(el =>  el.to == selctedEmail || selctedEmail == "" || el.from == selctedEmail);
+      const showEmail = dsplayIncomingEmailes(filter)
+      document.body.appendChild(showEmail)
+     }
+     else if (filterType == "from"){
+      filter = emails.filter(el =>  el.from == selctedEmail || selctedEmail == "" || el.from == selctedEmail);
+      const showEmail = dsplayIncomingEmailes(filter)
+      document.body.appendChild(showEmail)
+     }
+     document.body.appendChild(mainNav)
+     document.body.appendChild(sendEmail)
+}
 const divSendEmail = ()=>{
     const divsend = create("class-div-send","div")
     const divto = create("class-to","input")
@@ -224,7 +266,9 @@ const divSendEmail = ()=>{
 
 const dsplaySentsEmails = (array) => {
     const mainDiv = create("class-main-div","div")
-    array.forEach(element => {
+    array
+    .filter(el => selctedEmail == el.from || selctedEmail == "")
+    .forEach(element => {
         const divEmail = create("class-div-email","div")
         const to = create("class-to","h3")
         const title = create("class-title","h3")
@@ -273,25 +317,20 @@ const itemIncoming = createItemNav("דואר נכנס",mainNav)
 const itemOut = createItemNav("דואר יוצא",mainNav)
 const itemSetting = createItemNav("הגדרות",mainNav)
 const itemDraft = createItemNav("טיוטות",mainNav)
-const showEmail = dsplayIncomingEmailes(emails)
+
 
 const sendEmail = create("class-send","div")
 sendEmail.textContent = "+"
 
 
 itemIncoming.addEventListener("click",()=>{
-    clearPage()
-    document.body.appendChild(showEmail)
-    document.body.appendChild(mainNav)
-    document.body.appendChild(sendEmail)
+    FilteringIncomingMail()
+    filterType = "to"
 })
 
 itemOut.addEventListener("click",()=>{
-    clearPage()
-    const showEmailSent = dsplaySentsEmails(emailSent)
-    document.body.appendChild(showEmailSent)
-    document.body.appendChild(mainNav)
-    document.body.appendChild(sendEmail)
+    FilteringIncomingMail()
+    filterType = "from"
 })
 
 sendEmail.addEventListener("click", ()=> {
@@ -308,6 +347,15 @@ itemDraft.addEventListener("click",()=>{
     document.body.appendChild(showDrafts)
     document.body.appendChild(mainNav)
     document.body.appendChild(sendEmail)
+})
+
+itemSetting.addEventListener("click",()=>{
+  clearPage()
+  const setSelect = createSettingSelect(emails)
+  document.body.appendChild(setSelect)
+  document.body.appendChild(sendEmail)
+document.body.appendChild(mainNav)
+
 })
 
 
