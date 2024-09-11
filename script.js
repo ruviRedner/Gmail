@@ -148,6 +148,9 @@ const emails = [
 
 const createSettingSelect = (emailsList) => {
   const divSelect = create("class-div-select","div")
+  const header = create("class-header","h1")
+  header.textContent = "אנא בחר את האימייל שאתה מעוניין לעבוד איתו"
+  divSelect.appendChild(header)
   const select = create("class-select","select")
   const defOption = create("class-option","option")
   defOption.textContent = "please choose email addres"
@@ -161,6 +164,7 @@ const createSettingSelect = (emailsList) => {
   })
   select.addEventListener("change",(e)=>{
     selctedEmail = e.target.value
+    saveToLocalStorage()
     console.log(selctedEmail);
   })
   divSelect.appendChild(select)
@@ -209,21 +213,36 @@ const FilteringIncomingMail  = ()  => {
      clearPage()
      let filter
      if(filterType == "to"){
-      filter = emails.filter(el =>  el.to == selctedEmail || selctedEmail == "" || el.from == selctedEmail);
+      filter = emails.filter(el =>  el.to == selctedEmail || selctedEmail == "");
       const showEmail = dsplayIncomingEmailes(filter)
-      document.body.appendChild(showEmail)
+      if (filter.length == 0) {
+          alert("no emails to dysplay")
+        
+      }
+      else{
+        document.body.appendChild(showEmail)
+      }
+    
      }
      else if (filterType == "from"){
-      filter = emails.filter(el =>  el.from == selctedEmail || selctedEmail == "" || el.from == selctedEmail);
+      filter = emails.filter(el =>  el.from == selctedEmail || selctedEmail == "");
       const showEmail = dsplayIncomingEmailes(filter)
+      if (filter.length == 0) {
+        alert("no emails to dysplay")
+      
+    }
+    else{
       document.body.appendChild(showEmail)
+    }
+
      }
      document.body.appendChild(mainNav)
      document.body.appendChild(sendEmail)
+    
 }
 const divSendEmail = ()=>{
     const divsend = create("class-div-send","div")
-    const divto = create("class-to","input")
+    const divto = create("class-to-sent","input")
     divto.type = "email"
     divto.placeholder = "send to" 
     const divTitle = create("class-to-sent","input")
@@ -304,9 +323,41 @@ const dsplayDrafts = (array) => {
 
 const clearPage = () => {
      while (document.body.firstChild) {
-        document.body.removeChild(document.body.firstChild)
-        
+        document.body.removeChild(document.body.firstChild)   
      }
+     
+
+}
+const saveToLocalStorage = () => {
+      localStorage.setItem("currentEmail",selctedEmail)
+}
+
+const loadPage = () =>{
+     const currentMail = localStorage.getItem("currentEmail")
+     console.log(currentMail);
+     
+     if(currentMail){
+         let divCurrEmail = document.querySelector(".class-curr-email")
+         if(!divCurrEmail){
+          const divCurrEmail = create("class-curr-email","div")
+          const divCurrH1 = create("class-curr-h1","h1")
+          const divCurrH2 = create("class-curr-h2","h2")
+          divCurrH1.textContent = "האימייל שלך"
+          divCurrH2.textContent = currentMail
+          divCurrEmail.appendChild(divCurrH1)
+          divCurrEmail.appendChild(divCurrH2)
+          document.body.appendChild(divCurrEmail) 
+         }
+         else{
+          let divCurrH2 = divCurrEmail.querySelector(".class-curr-h2")
+        //   if(!divCurrH2){
+        //    console.log("gfyegfye");
+        //    return ;
+        //  }
+          divCurrH2.textContent = currentMail
+          FilteringIncomingMail()
+        }    
+}
 }
 
 
@@ -322,15 +373,20 @@ const itemDraft = createItemNav("טיוטות",mainNav)
 const sendEmail = create("class-send","div")
 sendEmail.textContent = "+"
 
-
 itemIncoming.addEventListener("click",()=>{
-    FilteringIncomingMail()
+  
     filterType = "to"
+    FilteringIncomingMail()
+    loadPage()   
 })
 
 itemOut.addEventListener("click",()=>{
-    FilteringIncomingMail()
+    
     filterType = "from"
+    FilteringIncomingMail()
+    loadPage()
+  
+  
 })
 
 sendEmail.addEventListener("click", ()=> {
@@ -338,7 +394,7 @@ sendEmail.addEventListener("click", ()=> {
     divSendEmail()
     document.body.appendChild(mainNav)
     document.body.appendChild(sendEmail)
-
+    loadPage()
 })
 
 itemDraft.addEventListener("click",()=>{
@@ -347,6 +403,8 @@ itemDraft.addEventListener("click",()=>{
     document.body.appendChild(showDrafts)
     document.body.appendChild(mainNav)
     document.body.appendChild(sendEmail)
+    loadPage()
+   
 })
 
 itemSetting.addEventListener("click",()=>{
@@ -354,20 +412,28 @@ itemSetting.addEventListener("click",()=>{
   const setSelect = createSettingSelect(emails)
   document.body.appendChild(setSelect)
   document.body.appendChild(sendEmail)
-document.body.appendChild(mainNav)
-
+  document.body.appendChild(mainNav)
+  loadPage()
 })
-
-
-
-
-
-
 
 document.body.appendChild(sendEmail)
 document.body.appendChild(mainNav)
 
+loadPage()
+
+const i = setInterval(()=>{console.clear(),console.log(new Date().toLocaleString().split(" ")[1])},1000)
 
 
+const divDate = create("class-date","div")
+const divTime = create("class-time","p")
 
+// divTime.textContent = new Date().toLocaleString().split(" ")[1]
+
+setInterval(()=>{
+    divTime.textContent = new Date().toLocaleString().split(" ")[1]
+},1000)
+
+divDate.appendChild(divTime)
+
+document.body.appendChild(divDate)
 
