@@ -334,6 +334,7 @@ const saveToLocalStorage = () => {
 
 const loadPage = () =>{
      const currentMail = localStorage.getItem("currentEmail")
+     selctedEmail = currentMail
      console.log(currentMail);
      
      if(currentMail){
