@@ -139,7 +139,7 @@ const emails = [
     }
    
   ];
-  const emailSent = []
+  // const emailSent = []
 
   const draftEmail = []
 
@@ -242,6 +242,9 @@ const FilteringIncomingMail  = ()  => {
 }
 const divSendEmail = ()=>{
     const divsend = create("class-div-send","div")
+    const divFrom = create("class-to-sent" ,"input")
+    divFrom.type = "email"
+    divFrom.value = ` ${selctedEmail}`
     const divto = create("class-to-sent","input")
     divto.type = "email"
     divto.placeholder = "send to" 
@@ -257,6 +260,7 @@ const divSendEmail = ()=>{
     const draft = create("class-to-sent","button")
     draft.textContent = "save as draft"
     draft.id = "draft-btn"
+    divsend.appendChild(divFrom)
     divsend.appendChild(divto)
     divsend.appendChild(divTitle)
     divsend.appendChild(divBody)
@@ -265,16 +269,18 @@ const divSendEmail = ()=>{
     document.body.appendChild(divsend)
 
     submit.addEventListener("click",()=>{
-        emailSent.push({
+        emails.push({
+            from: divFrom.value,
             to: divto.value,
             title:divTitle.value,
             body:divBody.value
         })
-        console.log(emailSent);
+        console.log(emails);
         divsend.remove()
     })
     draft.addEventListener("click",()=>{
         draftEmail.push({
+            from: divFrom.value ,
             to: divto.value,
             title:divTitle.value,
             body:divBody.value
@@ -283,36 +289,42 @@ const divSendEmail = ()=>{
     })
 }
 
-const dsplaySentsEmails = (array) => {
-    const mainDiv = create("class-main-div","div")
-    array
-    .filter(el => selctedEmail == el.from || selctedEmail == "")
-    .forEach(element => {
-        const divEmail = create("class-div-email","div")
-        const to = create("class-to","h3")
-        const title = create("class-title","h3")
-        const body = create("class-body","h3")
-        to.textContent = `TO: ${element.to}`
-        title.textContent = `TITLE: ${element.title}`
-        body.textContent = `BODY: ${element.body} `
-        divEmail.appendChild(to)
-        divEmail.appendChild(title)
-        divEmail.appendChild(body)
-        mainDiv.appendChild(divEmail)       
-    });
-    return mainDiv
-}
+// const dsplaySentsEmails = (array) => {
+//     const mainDiv = create("class-main-div","div")
+//     array
+//     .filter(el => selctedEmail == el.from || selctedEmail == "")
+//     .forEach(element => {
+//         const divEmail = create("class-div-email","div")
+//         const from = create("class-from","h3")
+//         const to = create("class-to","h3")
+//         const title = create("class-title","h3")
+//         const body = create("class-body","h3")
+//         from.textContent = `FROM: ${element.from}`
+//         to.textContent = `TO: ${element.to}`
+//         title.textContent = `TITLE: ${element.title}`
+//         body.textContent = `BODY: ${element.body} `
+//         divEmail.appendChild(from)
+//         divEmail.appendChild(to)
+//         divEmail.appendChild(title)
+//         divEmail.appendChild(body)
+//         mainDiv.appendChild(divEmail)       
+//     });
+//     return mainDiv
+// }
 
 const dsplayDrafts = (array) => {
     const mainDiv = create("class-main-div","div")
     array.forEach(element => {
         const divEmail = create("class-div-email","div")
+        const from = create("class-from","h3")
         const to = create("class-to","h3")
         const title = create("class-title","h3")
         const body = create("class-body","h3")
+        from.textContent = `FROM: ${element.from}`
         to.textContent = `TO: ${element.to}`
         title.textContent = `TITLE: ${element.title}`
         body.textContent = `BODY: ${element.body} `
+        divEmail.appendChild(from)
         divEmail.appendChild(to)
         divEmail.appendChild(title)
         divEmail.appendChild(body)
@@ -422,7 +434,7 @@ document.body.appendChild(mainNav)
 
 loadPage()
 
-const i = setInterval(()=>{console.clear(),console.log(new Date().toLocaleString().split(" ")[1])},1000)
+const i = setInterval(()=>{new Date().toLocaleString().split(" ")[1]},1000)
 
 
 const divDate = create("class-date","div")
@@ -437,4 +449,6 @@ setInterval(()=>{
 divDate.appendChild(divTime)
 
 document.body.appendChild(divDate)
+console.log(emails);
+
 
